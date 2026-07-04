@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Briefing — Weather</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="sheet" id="sheet">
+
+  <!-- HEADER -->
+  <header class="masthead">
+    <div class="masthead-top">
+      <span class="eyebrow">Daily Briefing</span>
+      <button class="mode-toggle" id="modeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">◐</button>
+    </div>
+    <h1 class="masthead-title">Your Weather, Read Like a Field Note.</h1>
+  </header>
+
+  <!-- SEARCH -->
+  <section class="search-panel">
+    <form id="searchForm" class="search-row" autocomplete="off">
+      <input type="text" id="cityInput" placeholder="Shehar ka naam likho…" required>
+      <button type="button" id="unitToggle" class="unit-btn">°C</button>
+      <button type="submit" class="go-btn">Dekho</button>
+    </form>
+    <div class="chips" id="historyChips">
+      {% for c in history %}
+        <button class="chip" data-city="{{ c }}">{{ c }}</button>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div id="statusMsg" class="status-msg" hidden></div>
+
+  <!-- MAIN BRIEFING -->
+  <main id="briefing" class="briefing" hidden>
+
+    <section class="today-card">
+      <div class="today-left">
+        <img id="weatherIcon" class="weather-icon" src="" alt="">
+        <div>
+          <div class="temp-reading"><span id="tempValue">--</span><span id="unitLabel">°C</span></div>
+          <div class="city-name" id="cityName">—</div>
+          <div class="condition-desc" id="conditionDesc">—</div>
+        </div>
+      </div>
+      <div class="today-right">
+        <dl class="stat-list">
+          <div class="stat-row"><dt>Humidity</dt><dd id="humidityValue">—</dd></div>
+          <div class="stat-row"><dt>Wind</dt><dd id="windValue">—</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- RAIN ALERT -->
+    <section id="rainAlert" class="rain-alert" hidden>
+      <span class="rain-alert-icon">☔</span>
+      <span id="rainAlertText"></span>
+    </section>
+
+    <!-- AQI + OUTFIT -->
+    <section class="dual-panel">
+      <div class="aqi-card">
+        <span class="panel-label">Air Quality</span>
+        <div class="gauge-wrap">
+          <svg id="aqiGauge" viewBox="0 0 140 90" class="gauge-svg">
+            <path id="gaugeTrack" d="M 15 80 A 55 55 0 0 1 125 80" fill="none" stroke-width="10" stroke-linecap="round"></path>
+            <path id="gaugeFill" d="M 15 80 A 55 55 0 0 1 125 80" fill="none" stroke-width="10" stroke-linecap="round"></path>
+            <circle id="gaugeNeedleBase" cx="70" cy="80" r="4"></circle>
+            <line id="gaugeNeedle" x1="70" y1="80" x2="70" y2="35" stroke-width="3" stroke-linecap="round"></line>
+          </svg>
+          <div class="gauge-readout">
+            <span id="aqiLabel">—</span>
+          </div>
+        </div>
+        <p class="aqi-advice" id="aqiAdvice">Search ek city, AQI dikhega.</p>
+      </div>
+
+      <div class="outfit-card">
+        <span class="panel-label">Smart Advisory</span>
+        <ul class="advice-list" id="adviceList"></ul>
+      </div>
+    </section>
+
+    <!-- FORECAST STRIP -->
+    <section class="forecast-section">
+      <span class="panel-label">5-Day Outlook</span>
+      <div class="forecast-strip" id="forecastStrip"></div>
+    </section>
+
+    <!-- MOOD JOURNAL -->
+    <section class="mood-section">
+      <span class="panel-label">Mood Journal</span>
+      <p class="mood-prompt">Aaj mausam me tumhara mood kaisa hai?</p>
+      <div class="mood-picker" id="moodPicker">
+        <button class="mood-btn" data-mood="5" title="Great">😄</button>
+        <button class="mood-btn" data-mood="4" title="Good">🙂</button>
+        <button class="mood-btn" data-mood="3" title="Okay">😐</button>
+        <button class="mood-btn" data-mood="2" title="Low">😕</button>
+        <button class="mood-btn" data-mood="1" title="Bad">😞</button>
+      </div>
+      <div class="chart-wrap">
+        <svg id="moodChart" viewBox="0 0 600 180" class="mood-chart-svg" preserveAspectRatio="none"></svg>
+        <p class="chart-empty" id="chartEmpty">Mood log karo, yahan tumhara weather-mood pattern dikhega.</p>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
